@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -45,11 +48,36 @@ public class AdapterPalce extends BaseAdapter {
         Place place = list.get(position);
 
         TextView txtId = convertView.findViewById(R.id.textViewPlaceId);
-        TextView txtName = convertView.findViewById(R.id.textViewPlaceName);
+        EditText txtName = convertView.findViewById(R.id.edittxt);
+        ImageButton btnU = convertView.findViewById(R.id.btnU);
+        ImageButton btnD = convertView.findViewById(R.id.btnD);
 
         txtId.setText(place.getId()+".");
         txtName.setText(place.getName());
 
+        btnU.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                place.setName(txtName.getText().toString());
+                MainActivity2 instance = MainActivity2.getInstance();
+                instance.getDb().updatePlace(place);
+                Toast.makeText(instance, "Update place successfull", Toast.LENGTH_SHORT).show();
+                instance.update();
+            }
+        });
+
+        btnD.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity2 instance = MainActivity2.getInstance();
+                instance.getDb().deletePlace(place.getId());
+                Toast.makeText(instance, "Delete place successfull", Toast.LENGTH_SHORT).show();
+                instance.update();
+            }
+        });
+
         return convertView;
+
+
     }
 }

@@ -4,9 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +20,17 @@ public class MainActivity2 extends AppCompatActivity {
     AdapterPalce adapter;
     TextView txt;
     Button btnSave,btnCan;
-    DatabasePlace db;
+    ImageButton btnU,btnD;
     int index = -1;
+
+    private static MainActivity2 instance;
+    private static DatabasePlace db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        instance = this;
         db  = new DatabasePlace(this);
 
         db.deletePlace(2);
@@ -35,11 +41,16 @@ public class MainActivity2 extends AppCompatActivity {
         listView = findViewById(R.id.listViewPlace);
         txt = findViewById(R.id.edtInputPlace);
         btnSave = findViewById(R.id.btnSave);
+        btnU = findViewById(R.id.btnU);
+        btnD = findViewById(R.id.btnD);
+
+
 
         list = new ArrayList<>();
         list = db.getAllPlace();
         adapter = new AdapterPalce(this,R.layout.item_place,list);
         listView.setAdapter(adapter);
+
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,9 +61,10 @@ public class MainActivity2 extends AppCompatActivity {
                 update();
             }
         });
+
     }
 
-    private void update() {
+    public void update() {
         list.clear();
         List<Place> temp = db.getAllPlace();
         for (Place n : temp){
@@ -60,5 +72,14 @@ public class MainActivity2 extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
+
+    public static MainActivity2 getInstance(){
+        return instance;
+    }
+
+    public static DatabasePlace getDb() {
+        return db;
+    }
+
 
 }
